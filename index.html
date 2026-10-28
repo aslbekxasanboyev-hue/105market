@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>105 Market</title>
+<style>
+:root{--blue:#1565d8;--blue-d:#0d47a1;--blue-l:#eaf2ff;--line:#dbe6f7;--text:#13233f;--muted:#6b7a99;--red:#e53935;--green:#2e9e5b;--orange:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--blue-l);color:var(--text);line-height:1.4;-webkit-text-size-adjust:100%}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
+.hidden{display:none!important}
+header{background:var(--blue);color:#fff;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(13,71,161,.3)}
+.bar{max-width:1150px;margin:0 auto;padding:12px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.logo{font-size:22px;font-weight:800;white-space:nowrap;cursor:pointer}
+.logo b{background:#fff;color:var(--blue);padding:2px 8px;border-radius:8px;margin-right:6px}
+.logo small{font-size:13px;font-weight:600;opacity:.85;margin-left:8px}
+.sp{flex:1}
+.hbtn{background:#fff;color:var(--blue);border:0;border-radius:10px;padding:10px 14px;font-weight:700;font-size:15px;text-decoration:none;display:inline-block}
+.hbtn.ghost{background:rgba(255,255,255,.18);color:#fff}
+.lang{display:flex;background:rgba(255,255,255,.18);border-radius:10px;padding:3px}
+.lang button{background:none;border:0;color:#fff;font-weight:700;padding:7px 11px;border-radius:8px;font-size:14px}
+.lang button.on{background:#fff;color:var(--blue)}
+.badge{background:var(--red);color:#fff;border-radius:99px;font-size:12px;padding:1px 7px;margin-left:6px}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:700;font-size:15px}
+.btn:hover{background:var(--blue-d)}.btn:disabled{background:#b6c4de;cursor:not-allowed}
+.btn.sec{background:var(--blue-l);color:var(--blue)}.btn.danger{background:#fdeaea;color:var(--red)}.btn.ok{background:var(--green)}
+.btn.sm{padding:7px 11px;font-size:13px;border-radius:8px}
+.field label{font-size:13px;color:var(--muted);font-weight:600;display:block;margin-bottom:3px}
+.field input,.field select,.field textarea,.inp{width:100%;padding:10px;border:1px solid #c7d6f0;border-radius:10px;margin-bottom:10px;background:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{font-size:12px;color:var(--muted)}
+.overlay{position:fixed;inset:0;background:rgba(10,25,60,.5);display:none;z-index:20}.overlay.show{display:block}
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:12px;background:rgba(10,25,60,.55)}
+.modal.show{display:flex}
+.mbox{background:#fff;border-radius:16px;max-width:620px;width:100%;max-height:92vh;overflow-y:auto;padding:20px;position:relative}
+.mbox h2{margin-bottom:12px;font-size:20px;padding-right:30px}
+.mclose{position:absolute;top:10px;right:14px;background:none;border:0;font-size:28px;color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--blue-d);color:#fff;padding:12px 20px;border-radius:10px;display:none;z-index:99;max-width:92%;text-align:center}
+.st{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.st.new{background:#e0edff;color:var(--blue)}.st.processing{background:#fff3d6;color:#b77900}.st.ready{background:#e6e0ff;color:#5b3fd0}.st.delivered{background:#dff5e8;color:var(--green)}.st.cancelled{background:#fdeaea;color:var(--red)}
+.demo{background:#fff3d6;color:#7a5200;text-align:center;font-size:13px;padding:8px 12px}
+.photo-prev{width:100%;height:150px;background:var(--blue-l);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:50px;overflow:hidden;margin-bottom:8px}
+.photo-prev img{width:100%;height:100%;object-fit:cover}
+
+main{max-width:1150px;margin:0 auto;padding:16px}
+.search{flex:1;min-width:160px;display:flex;background:#fff;border-radius:10px;overflow:hidden}
+.search input{flex:1;border:0;padding:11px 14px;outline:none;min-width:0}
+.search span{padding:0 12px;display:flex;align-items:center}
+.hero{background:linear-gradient(135deg,var(--blue),var(--blue-d));color:#fff;border-radius:18px;padding:26px;margin-bottom:16px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.hero h1{font-size:26px;margin-bottom:6px}.hero p{opacity:.9}
+.perks{display:flex;gap:10px;flex-wrap:wrap}.perk{background:rgba(255,255,255,.16);padding:8px 14px;border-radius:10px;font-size:14px}
+.tools{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.cats{display:flex;gap:8px;overflow-x:auto;flex:1;padding-bottom:4px}
+.cat{background:#fff;color:var(--blue);border:2px solid var(--blue);border-radius:99px;padding:7px 16px;font-weight:600;white-space:nowrap}
+.cat.on{background:var(--blue);color:#fff}
+.tools select{padding:9px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}
+.card{background:#fff;border-radius:14px;padding:12px;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(21,101,216,.1);position:relative;transition:.15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(21,101,216,.18)}
+.pic{height:140px;background:var(--blue-l);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:56px;overflow:hidden;margin-bottom:10px;cursor:pointer}
+.pic img{width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;top:18px;left:18px;background:var(--red);color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px}
+.pcat{font-size:12px;color:var(--muted);margin-bottom:2px}
+.pname{font-weight:600;font-size:15px;flex:1;cursor:pointer}
+.prow{margin:6px 0 10px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.price{color:var(--blue);font-weight:800}.old{color:var(--muted);text-decoration:line-through;font-size:13px}
+.empty{text-align:center;color:var(--muted);padding:40px 0;grid-column:1/-1}
+footer{text-align:center;color:var(--muted);padding:26px 16px;font-size:14px;line-height:1.7}
+.drawer{position:fixed;top:0;right:-100%;width:min(430px,100%);height:100%;background:#fff;z-index:30;transition:right .25s;display:flex;flex-direction:column}
+.drawer.show{right:0}
+.dh{background:var(--blue);color:#fff;padding:16px;display:flex;justify-content:space-between;font-weight:700;font-size:18px}
+.dh button{background:none;border:0;color:#fff;font-size:28px;line-height:1}
+.items{flex:1;overflow-y:auto;padding:12px;min-height:90px}
+.item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.item .th{width:48px;height:48px;border-radius:8px;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;flex-shrink:0}
+.item .th img{width:100%;height:100%;object-fit:cover}
+.item .i{flex:1;font-size:14px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:30px;height:30px;border-radius:8px;border:0;background:var(--blue-l);color:var(--blue);font-weight:800;font-size:16px}
+.foot{padding:14px;border-top:1px solid var(--line);max-height:62%;overflow-y:auto}
+.foot h4{font-size:13px;color:var(--muted);margin:4px 0 6px}
+.seg{display:flex;gap:6px;margin-bottom:10px}
+.seg button{flex:1;background:#fff;border:2px solid var(--line);border-radius:10px;padding:9px 6px;font-weight:600;color:var(--text);font-size:14px}
+.seg button.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+.sumrow{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px}
+.sumrow.t{font-weight:800;font-size:18px;margin:6px 0 10px}
+.foot .btn{width:100%;padding:13px;font-size:16px}
+</style>
+</head>
+<body>
+<div class="demo hidden" id="demo"></div>
+<header>
+  <div class="bar">
+    <div class="logo" id="logo" onclick="window.scrollTo(0,0)"></div>
+    <div class="search"><input id="q" data-ip="s_search" oninput="renderGrid()"><span>🔍</span></div>
+    <div class="lang"><button data-lang="ru" onclick="chLang('ru')">RU</button><button data-lang="uz" onclick="chLang('uz')">UZ</button></div>
+    <button class="hbtn" onclick="openCart()">🛒 <span data-i="s_cart"></span><span class="badge" id="count">0</span></button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div><h1 id="heroT"></h1><p data-i="s_hero2"></p></div>
+    <div class="perks"><div class="perk" data-i="s_p1"></div><div class="perk" data-i="s_p2"></div><div class="perk" data-i="s_p3"></div></div>
+  </div>
+  <div class="tools">
+    <div class="cats" id="cats"></div>
+    <select id="sort" onchange="renderGrid()"><option value="0" data-i="s_sort0"></option><option value="1" data-i="s_sort1"></option><option value="2" data-i="s_sort2"></option><option value="3" data-i="s_sort3"></option></select>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+<footer id="footer"></footer>
+
+<div class="overlay" id="ov" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="dh"><span data-i="s_yourcart"></span><button onclick="closeCart()">×</button></div>
+  <div class="items" id="items"></div>
+  <div class="foot">
+    <div class="field">
+      <input id="cn" data-ip="s_name" autocomplete="name">
+      <input id="cp" data-ip="s_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+998">
+    </div>
+    <h4 data-i="s_delivery"></h4>
+    <div class="seg"><button id="dl_delivery" data-i="dl_delivery" onclick="setDl('delivery')"></button><button id="dl_pickup" data-i="dl_pickup" onclick="setDl('pickup')"></button></div>
+    <div class="field"><input id="ca" data-ip="s_addr" autocomplete="street-address"></div>
+    <div class="note" id="pickNote" style="margin-bottom:10px"></div>
+    <h4 data-i="s_payment"></h4>
+    <div class="seg"><button id="pay_cash" data-i="pay_cash" onclick="setPay('cash')"></button><button id="pay_card" data-i="pay_card" onclick="setPay('card')"></button></div>
+    <div class="field"><input id="cc" data-ip="s_comment"></div>
+    <div class="sumrow"><span data-i="s_sub"></span><span id="sSub"></span></div>
+    <div class="sumrow"><span data-i="s_fee"></span><span id="sFee"></span></div>
+    <div class="sumrow t"><span data-i="s_total"></span><span id="sTotal"></span></div>
+    <button class="btn" id="orderBtn" data-i="s_order" onclick="placeOrder()"></button>
+  </div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 105 Market: общий слой (переводы, данные) ===== */
+const SEED={"products":[{"id":1,"name":{"ru":"Молоко 1 л","uz":"Sut 1 l"},"desc":{"ru":"Натуральное пастеризованное молоко, 3.2% жирности.","uz":"Tabiiy pasterizatsiyalangan sut, 3.2% yog'lilik."},"cat":{"ru":"Продукты","uz":"Oziq-ovqat"},"price":12000,"old":0,"stock":40,"emoji":"🥛","img":"","active":true},{"id":2,"name":{"ru":"Хлеб белый","uz":"Oq non"},"desc":{"ru":"Свежий хлеб, выпекается каждое утро.","uz":"Har kuni ertalab pishiriladigan yangi non."},"cat":{"ru":"Продукты","uz":"Oziq-ovqat"},"price":4000,"old":0,"stock":60,"emoji":"🍞","img":"","active":true},{"id":3,"name":{"ru":"Яйца (10 шт)","uz":"Tuxum (10 dona)"},"desc":{"ru":"Куриные яйца категории С1.","uz":"S1 toifadagi tovuq tuxumi."},"cat":{"ru":"Продукты","uz":"Oziq-ovqat"},"price":15000,"old":17000,"stock":35,"emoji":"🥚","img":"","active":true},{"id":4,"name":{"ru":"Рис 1 кг","uz":"Guruch 1 kg"},"desc":{"ru":"Длиннозёрный рис высшего сорта.","uz":"Oliy navli uzun donli guruch."},"cat":{"ru":"Продукты","uz":"Oziq-ovqat"},"price":18000,"old":0,"stock":50,"emoji":"🍚","img":"","active":true},{"id":5,"name":{"ru":"Яблоки 1 кг","uz":"Olma 1 kg"},"desc":{"ru":"Сочные сладкие яблоки местного урожая.","uz":"Mahalliy hosildan shirin va sersuv olma."},"cat":{"ru":"Фрукты","uz":"Mevalar"},"price":14000,"old":0,"stock":30,"emoji":"🍎","img":"","active":true},{"id":6,"name":{"ru":"Бананы 1 кг","uz":"Banan 1 kg"},"desc":{"ru":"Спелые бананы.","uz":"Pishgan import bananlar."},"cat":{"ru":"Фрукты","uz":"Mevalar"},"price":20000,"old":24000,"stock":25,"emoji":"🍌","img":"","active":true},{"id":7,"name":{"ru":"Апельсины 1 кг","uz":"Apelsin 1 kg"},"desc":{"ru":"Сладкие апельсины с тонкой кожурой.","uz":"Yupqa po'stli shirin apelsin."},"cat":{"ru":"Фрукты","uz":"Mevalar"},"price":22000,"old":0,"stock":20,"emoji":"🍊","img":"","active":true},{"id":8,"name":{"ru":"Виноград 1 кг","uz":"Uzum 1 kg"},"desc":{"ru":"Виноград без косточек.","uz":"Danaksiz uzum."},"cat":{"ru":"Фрукты","uz":"Mevalar"},"price":25000,"old":0,"stock":15,"emoji":"🍇","img":"","active":true},{"id":9,"name":{"ru":"Вода 1.5 л","uz":"Suv 1,5 l"},"desc":{"ru":"Питьевая негазированная вода.","uz":"Gazsiz ichimlik suvi."},"cat":{"ru":"Напитки","uz":"Ichimliklar"},"price":5000,"old":0,"stock":100,"emoji":"💧","img":"","active":true},{"id":10,"name":{"ru":"Сок яблочный 1 л","uz":"Olma sharbati 1 l"},"desc":{"ru":"Натуральный сок прямого отжима.","uz":"Tabiiy siqilgan sharbat."},"cat":{"ru":"Напитки","uz":"Ichimliklar"},"price":13000,"old":0,"stock":40,"emoji":"🧃","img":"","active":true},{"id":11,"name":{"ru":"Чай чёрный","uz":"Qora choy"},"desc":{"ru":"Крупнолистовой чай, 100 г.","uz":"Yirik bargli choy, 100 g."},"cat":{"ru":"Напитки","uz":"Ichimliklar"},"price":16000,"old":0,"stock":45,"emoji":"🍵","img":"","active":true},{"id":12,"name":{"ru":"Кофе растворимый","uz":"Eruvchan qahva"},"desc":{"ru":"Сублимированный кофе, 100 г.","uz":"Sublimatsiyalangan qahva, 100 g."},"cat":{"ru":"Напитки","uz":"Ichimliklar"},"price":35000,"old":40000,"stock":22,"emoji":"☕","img":"","active":true},{"id":13,"name":{"ru":"Шоколад","uz":"Shokolad"},"desc":{"ru":"Молочный шоколад, плитка 90 г.","uz":"Sutli shokolad, 90 g plitka."},"cat":{"ru":"Сладости","uz":"Shirinliklar"},"price":11000,"old":0,"stock":70,"emoji":"🍫","img":"","active":true},{"id":14,"name":{"ru":"Печенье","uz":"Pechenye"},"desc":{"ru":"Сдобное печенье с маслом.","uz":"Sariyog'li shirin pechenye."},"cat":{"ru":"Сладости","uz":"Shirinliklar"},"price":9000,"old":0,"stock":55,"emoji":"🍪","img":"","active":true},{"id":15,"name":{"ru":"Мыло","uz":"Sovun"},"desc":{"ru":"Туалетное мыло с увлажняющим кремом.","uz":"Namlovchi kremli hammom sovuni."},"cat":{"ru":"Для дома","uz":"Uy uchun"},"price":6000,"old":0,"stock":80,"emoji":"🧼","img":"","active":true},{"id":16,"name":{"ru":"Порошок стиральный","uz":"Kir yuvish kukuni"},"desc":{"ru":"Автомат, 3 кг, для цветного и белого белья.","uz":"Avtomat uchun, 3 kg, rangli va oq kirlar uchun."},"cat":{"ru":"Для дома","uz":"Uy uchun"},"price":42000,"old":0,"stock":18,"emoji":"🧺","img":"","active":true}],"settings":{"name":"105 Market","phone":"+998 XX XXX XX XX","addr":"Toshkent","hours":"09:00–22:00","deliveryFee":10000,"freeFrom":150000}};
+const I18N={
+ru:{
+ cur:"сум",save:"Сохранить",cancel:"Отмена",del:"Удалить",edit:"Изменить",close:"Закрыть",saved:"Сохранено ✅",
+ err_generic:"Ошибка. Попробуйте ещё раз",err_invalid:"Проверьте введённые данные",err_stock:"Недостаточно товара на складе",err_net:"Нет связи с сервером",
+ confirm_del:"Удалить? Это действие нельзя отменить.",demo:"Демо-режим: данные хранятся только в этом браузере. Для реальной работы запустите сервер (см. README).",
+ st_new:"Новый",st_processing:"В обработке",st_ready:"Готов",st_delivered:"Выдан",st_cancelled:"Отменён",
+ dl_delivery:"Доставка",dl_pickup:"Самовывоз",pay_cash:"Наличные",pay_card:"Карта при получении",
+ s_search:"Поиск товаров...",s_cart:"Корзина",s_all:"Все",s_sort0:"По умолчанию",s_sort1:"Сначала дешевле",s_sort2:"Сначала дороже",s_sort3:"По названию",
+ s_hero:"Добро пожаловать в {0}",s_hero2:"Свежие продукты и товары для дома",s_p1:"🚚 Быстрая доставка",s_p2:"✅ Гарантия качества",s_p3:"💳 Удобная оплата",
+ s_add:"В корзину",s_out:"Нет в наличии",s_instock:"В наличии: {0} шт.",s_nodesc:"Описание скоро появится.",s_none:"Ничего не найдено 😕",s_empty:"Корзина пуста",
+ s_added:"Добавлено в корзину",s_nomore:"Больше нет в наличии",s_name:"Ваше имя",s_phone:"Номер телефона",s_addr:"Адрес доставки",s_comment:"Комментарий к заказу",
+ s_sub:"Товары",s_fee:"Доставка",s_free:"Бесплатно",s_total:"Итого",s_order:"Оформить заказ",s_fill:"Заполните имя и адрес",s_phoneerr:"Проверьте номер телефона",
+ s_thanks_t:"Заказ принят! ✅",s_thanks:"Номер вашего заказа: №{0}. Мы свяжемся с вами для подтверждения.",s_hours:"Время работы",s_freefrom:"Бесплатная доставка от {0}",
+ s_yourcart:"Ваша корзина",s_delivery:"Получение",s_payment:"Оплата",s_pickup_at:"Самовывоз по адресу: {0}",
+ a_title:"Личный кабинет",a_login_sub:"Вход для владельца магазина",a_pass:"Пароль",a_enter:"Войти",a_wrong:"Неверный пароль",a_logout:"Выйти",a_store:"Открыть магазин",
+ a_dash:"Обзор",a_orders:"Заказы",a_products:"Товары",a_customers:"Клиенты",a_settings:"Настройки",
+ a_rev:"Выручка",a_revtoday:"Выручка сегодня",a_cnt:"Заказов",a_new:"Новых",a_avg:"Средний чек",a_low:"Заканчиваются (≤5 шт.)",a_chart:"Выручка по дням",a_d7:"7 дней",a_d30:"30 дней",
+ a_top:"Топ товаров",a_nosales:"Пока нет продаж",a_bystatus:"Заказы по статусам",a_latest:"Последние заказы",
+ a_search:"Поиск: №, имя, телефон",a_neworder:"+ Новый заказ",a_all:"Все",a_client:"Клиент",a_status:"Статус заказа",a_sum:"Сумма",a_details:"Подробнее",a_print:"Печать",a_order:"Заказ",a_items:"Состав заказа",a_comment:"Комментарий",
+ a_next_new:"Принять в работу",a_next_processing:"Заказ готов",a_next_ready:"Выдан / доставлен",a_cancel_order:"Отменить заказ",a_delete_order:"Удалить заказ",a_noorders:"Заказов нет",a_newtoast:"Новый заказ №{0}!",
+ a_photo:"Фото товара",a_upload:"📷 Загрузить фото",a_remove:"Убрать",a_name_ru:"Название (русский)",a_name_uz:"Название (узбекский)",a_cat_ru:"Категория (русский)",a_cat_uz:"Категория (узбекский)",
+ a_desc_ru:"Описание (русский)",a_desc_uz:"Описание (узбекский)",a_price:"Цена, сум",a_old:"Старая цена (для скидки)",a_stock:"Остаток, шт.",a_emoji:"Эмодзи (если нет фото)",a_active:"Показывать в магазине",
+ a_addproduct:"+ Добавить товар",a_newproduct:"Новый товар",a_editproduct:"Изменить товар",a_pricehint:"Цену и остаток можно менять прямо в списке — сохраняется сразу.",a_visible:"В магазине",
+ a_cust_orders:"Заказов",a_cust_total:"На сумму",a_last:"Последний заказ",a_nocust:"Клиентов пока нет",
+ a_s_store:"Данные магазина",a_s_name:"Название магазина",a_s_phone:"Телефон",a_s_addr:"Адрес",a_s_hours:"Время работы",a_s_fee:"Стоимость доставки, сум",a_s_free:"Бесплатная доставка от, сум (0 — выключено)",
+ a_s_pass:"Новый пароль (минимум 6 символов)",a_s_security:"Безопасность",a_s_data:"Данные",a_s_reset:"Сбросить демо-данные",a_pass_short:"Пароль слишком короткий",
+ a_need_name_price:"Укажите название (рус.) и цену",a_add:"Добавить",a_choose:"Выберите товар",a_total:"Итого",a_unit:"шт."
+},
+uz:{
+ cur:"so'm",save:"Saqlash",cancel:"Bekor qilish",del:"O'chirish",edit:"Tahrirlash",close:"Yopish",saved:"Saqlandi ✅",
+ err_generic:"Xatolik. Qayta urinib ko'ring",err_invalid:"Kiritilgan ma'lumotlarni tekshiring",err_stock:"Omborda tovar yetarli emas",err_net:"Serverga ulanib bo'lmadi",
+ confirm_del:"O'chirilsinmi? Bu amalni bekor qilib bo'lmaydi.",demo:"Demo rejim: ma'lumotlar faqat shu brauzerda saqlanadi. Haqiqiy ish uchun serverni ishga tushiring (README).",
+ st_new:"Yangi",st_processing:"Jarayonda",st_ready:"Tayyor",st_delivered:"Topshirildi",st_cancelled:"Bekor qilindi",
+ dl_delivery:"Yetkazib berish",dl_pickup:"Olib ketish",pay_cash:"Naqd pul",pay_card:"Qabul qilganda karta orqali",
+ s_search:"Tovarlarni qidirish...",s_cart:"Savat",s_all:"Hammasi",s_sort0:"Odatiy",s_sort1:"Avval arzonlari",s_sort2:"Avval qimmatlari",s_sort3:"Nomi bo'yicha",
+ s_hero:"{0} ga xush kelibsiz",s_hero2:"Yangi mahsulotlar va uy uchun tovarlar",s_p1:"🚚 Tez yetkazib berish",s_p2:"✅ Sifat kafolati",s_p3:"💳 Qulay to'lov",
+ s_add:"Savatga",s_out:"Mavjud emas",s_instock:"Mavjud: {0} dona",s_nodesc:"Tavsif tez orada qo'shiladi.",s_none:"Hech narsa topilmadi 😕",s_empty:"Savat bo'sh",
+ s_added:"Savatga qo'shildi",s_nomore:"Omborda boshqa yo'q",s_name:"Ismingiz",s_phone:"Telefon raqami",s_addr:"Yetkazib berish manzili",s_comment:"Buyurtmaga izoh",
+ s_sub:"Tovarlar",s_fee:"Yetkazib berish",s_free:"Bepul",s_total:"Jami",s_order:"Buyurtma berish",s_fill:"Ism va manzilni to'ldiring",s_phoneerr:"Telefon raqamini tekshiring",
+ s_thanks_t:"Buyurtma qabul qilindi! ✅",s_thanks:"Buyurtma raqamingiz: №{0}. Tasdiqlash uchun siz bilan bog'lanamiz.",s_hours:"Ish vaqti",s_freefrom:"{0} dan boshlab yetkazib berish bepul",
+ s_yourcart:"Sizning savatingiz",s_delivery:"Qabul qilish usuli",s_payment:"To'lov usuli",s_pickup_at:"Olib ketish manzili: {0}",
+ a_title:"Shaxsiy kabinet",a_login_sub:"Do'kon egasi uchun kirish",a_pass:"Parol",a_enter:"Kirish",a_wrong:"Parol noto'g'ri",a_logout:"Chiqish",a_store:"Do'konni ochish",
+ a_dash:"Umumiy ko'rinish",a_orders:"Buyurtmalar",a_products:"Tovarlar",a_customers:"Mijozlar",a_settings:"Sozlamalar",
+ a_rev:"Tushum",a_revtoday:"Bugungi tushum",a_cnt:"Buyurtmalar",a_new:"Yangilari",a_avg:"O'rtacha chek",a_low:"Tugayapti (≤5 dona)",a_chart:"Kunlar bo'yicha tushum",a_d7:"7 kun",a_d30:"30 kun",
+ a_top:"Eng ko'p sotilgan",a_nosales:"Hozircha sotuv yo'q",a_bystatus:"Holat bo'yicha buyurtmalar",a_latest:"So'nggi buyurtmalar",
+ a_search:"Qidirish: №, ism, telefon",a_neworder:"+ Yangi buyurtma",a_all:"Hammasi",a_client:"Mijoz",a_status:"Buyurtma holati",a_sum:"Summa",a_details:"Batafsil",a_print:"Chop etish",a_order:"Buyurtma",a_items:"Buyurtma tarkibi",a_comment:"Izoh",
+ a_next_new:"Ishga olish",a_next_processing:"Buyurtma tayyor",a_next_ready:"Topshirildi / yetkazildi",a_cancel_order:"Buyurtmani bekor qilish",a_delete_order:"Buyurtmani o'chirish",a_noorders:"Buyurtmalar yo'q",a_newtoast:"Yangi buyurtma №{0}!",
+ a_photo:"Tovar rasmi",a_upload:"📷 Rasm yuklash",a_remove:"Olib tashlash",a_name_ru:"Nomi (ruscha)",a_name_uz:"Nomi (o'zbekcha)",a_cat_ru:"Kategoriya (ruscha)",a_cat_uz:"Kategoriya (o'zbekcha)",
+ a_desc_ru:"Tavsif (ruscha)",a_desc_uz:"Tavsif (o'zbekcha)",a_price:"Narx, so'm",a_old:"Eski narx (chegirma uchun)",a_stock:"Qoldiq, dona",a_emoji:"Emoji (rasm bo'lmasa)",a_active:"Do'konda ko'rsatish",
+ a_addproduct:"+ Tovar qo'shish",a_newproduct:"Yangi tovar",a_editproduct:"Tovarni tahrirlash",a_pricehint:"Narx va qoldiqni to'g'ridan-to'g'ri ro'yxatda o'zgartirish mumkin — darhol saqlanadi.",a_visible:"Do'konda",
+ a_cust_orders:"Buyurtmalar",a_cust_total:"Summasi",a_last:"Oxirgi buyurtma",a_nocust:"Hozircha mijozlar yo'q",
+ a_s_store:"Do'kon ma'lumotlari",a_s_name:"Do'kon nomi",a_s_phone:"Telefon",a_s_addr:"Manzil",a_s_hours:"Ish vaqti",a_s_fee:"Yetkazib berish narxi, so'm",a_s_free:"Bepul yetkazib berish (so'mdan; 0 — o'chirilgan)",
+ a_s_pass:"Yangi parol (kamida 6 belgi)",a_s_security:"Xavfsizlik",a_s_data:"Ma'lumotlar",a_s_reset:"Demo ma'lumotlarni tiklash",a_pass_short:"Parol juda qisqa",
+ a_need_name_price:"Nomi (ruscha) va narxni kiriting",a_add:"Qo'shish",a_choose:"Tovarni tanlang",a_total:"Jami",a_unit:"dona"
+}};
+let LANG="ru";try{LANG=localStorage.getItem("m105_lang")||"ru"}catch(e){}
+if(LANG!=="uz")LANG="ru";
+const t=(k,...a)=>{let s=(I18N[LANG]&&I18N[LANG][k])||I18N.ru[k]||k;a.forEach((v,i)=>{s=s.split("{"+i+"}").join(v)});return s};
+function setLang(l){LANG=l==="uz"?"uz":"ru";try{localStorage.setItem("m105_lang",LANG)}catch(e){}document.documentElement.lang=LANG}
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>Math.round(+n||0).toLocaleString("ru-RU")+" "+t("cur");
+const L=o=>o&&typeof o==="object"?(o[LANG]||o.ru||""):(o||"");
+const STATUSES=["new","processing","ready","delivered","cancelled"];
+function toast(m){const e=$("#toast");e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",2600)}
+function applyI18n(){
+  $$("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));
+  $$("[data-ip]").forEach(e=>e.placeholder=t(e.dataset.ip));
+  $$("[data-lang]").forEach(b=>b.classList.toggle("on",b.dataset.lang===LANG));
+}
+function openModal(h){$("#mbox").innerHTML='<button class="mclose" onclick="closeModal()">×</button>'+h;$("#modal").classList.add("show")}
+function closeModal(){$("#modal").classList.remove("show")}
+const pubSettings=s=>({name:s.name,phone:s.phone,addr:s.addr,hours:s.hours,deliveryFee:s.deliveryFee,freeFrom:s.freeFrom});
+
+/* --- расчёт заказа (то же самое делает server.js) --- */
+function computeOrder(st,body,status){
+  const c=body.customer||{};
+  const name=String(c.name||"").trim().slice(0,80),phone=String(c.phone||"").trim().slice(0,30),addr=String(c.addr||"").trim().slice(0,200),comment=String(c.comment||"").trim().slice(0,300);
+  const delivery=body.delivery==="pickup"?"pickup":"delivery",payment=body.payment==="card"?"card":"cash";
+  if(name.length<2||phone.replace(/\D/g,"").length<9||(delivery==="delivery"&&addr.length<3))throw new Error("invalid");
+  const items=[];let sub=0;
+  for(const it of body.items||[]){
+    const p=st.products.find(x=>x.id===+it.id&&x.active!==false),q=Math.floor(+it.qty);
+    if(!p||!(q>=1&&q<=99))throw new Error("invalid");
+    if(q>p.stock)throw new Error("stock");
+    items.push({id:p.id,name:p.name,price:p.price,qty:q});sub+=p.price*q;
+  }
+  if(!items.length)throw new Error("invalid");
+  const s=st.settings,fee=delivery==="delivery"&&!(s.freeFrom>0&&sub>=s.freeFrom)?(+s.deliveryFee||0):0;
+  items.forEach(i=>{st.products.find(p=>p.id===i.id).stock-=i.qty});
+  const id=st.orders.reduce((m,o)=>Math.max(m,o.id),1000)+1;
+  const o={id,date:new Date().toISOString(),customer:{name,phone,addr,comment},items,sub,fee,total:sub+fee,delivery,payment,status:STATUSES.includes(status)?status:"new"};
+  st.orders.push(o);return o;
+}
+function applyStatus(st,id,s){
+  const o=st.orders.find(x=>x.id===id);if(!o||!STATUSES.includes(s))throw new Error("invalid");
+  if(s==="cancelled"&&o.status!=="cancelled")o.items.forEach(i=>{const p=st.products.find(x=>x.id===i.id);if(p)p.stock+=i.qty});
+  if(o.status==="cancelled"&&s!=="cancelled")o.items.forEach(i=>{const p=st.products.find(x=>x.id===i.id);if(p)p.stock=Math.max(0,p.stock-i.qty)});
+  o.status=s;
+}
+
+/* --- демо-режим: данные в localStorage --- */
+const LS="m105_db";
+function demoOrders(products){
+  let s=7;const r=()=>{s=(s*9301+49297)%233280;return s/233280};
+  const names=["Азиз","Дилноза","Жасур","Малика","Рустам","Нигора","Бекзод","Сардор"],out=[];
+  for(let i=0;i<34;i++){
+    const day=Math.floor(r()*14),time=Date.now()-day*864e5-Math.floor(r()*6e6),items=[],n=1+Math.floor(r()*4);
+    for(let k=0;k<n;k++){const p=products[Math.floor(r()*products.length)];if(!items.find(x=>x.id===p.id))items.push({id:p.id,name:p.name,price:p.price,qty:1+Math.floor(r()*3)})}
+    const sub=items.reduce((a,x)=>a+x.price*x.qty,0),del=r()<.7,fee=del&&sub<150000?10000:0;
+    out.push({date:new Date(time).toISOString(),customer:{name:names[Math.floor(r()*names.length)],phone:"+998 90 "+(100+Math.floor(r()*899))+" "+(10+Math.floor(r()*89))+" "+(10+Math.floor(r()*89)),addr:del?"Toshkent, Navoiy ko'chasi, "+(1+Math.floor(r()*80)):"",comment:""},items,sub,fee,total:sub+fee,delivery:del?"delivery":"pickup",payment:r()<.6?"cash":"card",status:day>=2?(r()<.08?"cancelled":"delivered"):(r()<.5?"new":"processing")});
+  }
+  out.sort((a,b)=>a.date<b.date?-1:1).forEach((o,i)=>o.id=1001+i);
+  return out;
+}
+function locLoad(){
+  let st=null;try{st=JSON.parse(localStorage.getItem(LS))}catch(e){}
+  if(!st){st=JSON.parse(JSON.stringify(SEED));st.orders=demoOrders(st.products);st.pass="admin123";locSave(st)}
+  return st;
+}
+function locSave(st){try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){throw new Error("storage")}}
+
+/* --- единый интерфейс данных: сервер или демо --- */
+const DB={
+  mode:"local",token:"",
+  async init(){
+    try{const r=await fetch("/api/ping",{cache:"no-store"});if(r.ok&&(await r.json()).ok)this.mode="server"}catch(e){}
+    try{this.token=sessionStorage.getItem("m105_token")||""}catch(e){}
+    if(this.mode==="server"&&this.token==="local")this.token="";
+    if(this.mode==="local"&&this.token&&this.token!=="local")this.token="";
+  },
+  async api(p,method="GET",body){
+    const h={"Content-Type":"application/json"};if(this.token)h.Authorization="Bearer "+this.token;
+    let r;try{r=await fetch("/api"+p,{method,headers:h,body:body!==undefined?JSON.stringify(body):undefined,cache:"no-store"})}catch(e){const x=new Error("net");throw x}
+    let j={};try{j=await r.json()}catch(e){}
+    if(!r.ok){const x=new Error(j.error||"server");x.status=r.status;throw x}
+    return j;
+  },
+  isAuthed(){return !!this.token},
+  logout(){this.token="";try{sessionStorage.removeItem("m105_token")}catch(e){}},
+  async login(pw){
+    if(this.mode==="server"){const r=await this.api("/login","POST",{password:pw});this.token=r.token}
+    else{if(pw!==locLoad().pass){const x=new Error("wrong");x.status=401;throw x}this.token="local"}
+    try{sessionStorage.setItem("m105_token",this.token)}catch(e){}
+  },
+  async getPublic(){
+    if(this.mode==="server")return this.api("/public");
+    const st=locLoad();return{settings:pubSettings(st.settings),products:st.products.filter(p=>p.active!==false)};
+  },
+  async createOrder(b){
+    if(this.mode==="server")return this.api("/orders","POST",b);
+    const st=locLoad(),o=computeOrder(st,b);locSave(st);return{id:o.id};
+  },
+  async getAdmin(){
+    if(this.mode==="server")return this.api("/admin/data");
+    const st=locLoad();return{products:st.products,orders:st.orders,settings:st.settings};
+  },
+  async manualOrder(b,status){
+    if(this.mode==="server")return this.api("/admin/orders","POST",{...b,status});
+    const st=locLoad(),o=computeOrder(st,b,status);locSave(st);return{id:o.id};
+  },
+  async setStatus(id,s){
+    if(this.mode==="server")return this.api("/admin/orders/"+id,"PATCH",{status:s});
+    const st=locLoad();applyStatus(st,id,s);locSave(st);return{ok:1};
+  },
+  async deleteOrder(id){
+    if(this.mode==="server")return this.api("/admin/orders/"+id,"DELETE");
+    const st=locLoad();st.orders=st.orders.filter(o=>o.id!==id);locSave(st);return{ok:1};
+  },
+  async saveProduct(p){
+    if(this.mode==="server")return this.api("/admin/products","POST",p);
+    const st=locLoad();
+    if(p.id){const i=st.products.findIndex(x=>x.id===p.id);if(i<0)throw new Error("invalid");st.products[i]={...st.products[i],...p}}
+    else{p={...p,id:st.products.reduce((m,x)=>Math.max(m,x.id),0)+1};st.products.push(p)}
+    locSave(st);return{product:st.products.find(x=>x.id===p.id)};
+  },
+  async deleteProduct(id){
+    if(this.mode==="server")return this.api("/admin/products/"+id,"DELETE");
+    const st=locLoad();st.products=st.products.filter(p=>p.id!==id);locSave(st);return{ok:1};
+  },
+  async saveSettings(s){
+    if(this.mode==="server")return this.api("/admin/settings","PUT",s);
+    const st=locLoad();st.settings={...st.settings,...s};locSave(st);return{ok:1};
+  },
+  async setPassword(pw){
+    if(this.mode==="server")return this.api("/admin/password","POST",{password:pw});
+    const st=locLoad();st.pass=pw;locSave(st);return{ok:1};
+  },
+  resetDemo(){try{localStorage.removeItem(LS)}catch(e){}}
+};
+
+let P=[],S={},cart={},cat="all",dl="delivery",pay="cash";
+try{cart=JSON.parse(localStorage.getItem("m105_cart")||"{}")||{}}catch(e){cart={}}
+const saveCart=()=>{try{localStorage.setItem("m105_cart",JSON.stringify(cart))}catch(e){}};
+const byId=id=>P.find(p=>p.id==id);
+const thumb=p=>p.img?`<img src="${esc(p.img)}" alt="" loading="lazy">`:esc(p.emoji||"🛍️");
+
+async function loadData(){const d=await DB.getPublic();P=d.products;S=d.settings}
+function chLang(l){setLang(l);renderAll()}
+
+function renderAll(){
+  applyI18n();
+  const nm=S.name||"105 Market",[a,...b]=nm.split(" ");
+  $("#logo").innerHTML=b.length?`<b>${esc(a)}</b>${esc(b.join(" "))}`:`<b>${esc(a)}</b>`;
+  document.title=nm;
+  $("#heroT").textContent=t("s_hero",nm);
+  const dm=$("#demo");dm.textContent=t("demo");dm.classList.toggle("hidden",DB.mode==="server");
+  const parts=[`© ${esc(nm)}`,esc(S.phone||""),esc(S.addr||"")].filter(Boolean).join(" · ");
+  $("#footer").innerHTML=parts+(S.hours?`<br>${t("s_hours")}: ${esc(S.hours)}`:"")+(S.freeFrom>0?`<br>${t("s_freefrom",fmt(S.freeFrom))}`:"");
+  renderCats();renderGrid();renderCart();
+}
+function renderCats(){
+  const m=new Map();P.forEach(p=>{if(p.cat&&p.cat.ru&&!m.has(p.cat.ru))m.set(p.cat.ru,L(p.cat))});
+  if(cat!=="all"&&!m.has(cat))cat="all";
+  $("#cats").innerHTML=`<button class="cat ${cat==="all"?"on":""}" data-c="all" onclick="setCat(this.dataset.c)">${t("s_all")}</button>`+
+    [...m].map(([k,v])=>`<button class="cat ${cat===k?"on":""}" data-c="${esc(k)}" onclick="setCat(this.dataset.c)">${esc(v)}</button>`).join("");
+}
+function setCat(c){cat=c;renderCats();renderGrid()}
+function renderGrid(){
+  const q=$("#q").value.trim().toLowerCase(),so=$("#sort").value;
+  let list=P.filter(p=>(cat==="all"||(p.cat&&p.cat.ru===cat))&&(!q||(L(p.name)+" "+p.name.ru+" "+p.name.uz+" "+L(p.desc)).toLowerCase().includes(q)));
+  if(so==="1")list.sort((a,b)=>a.price-b.price);
+  if(so==="2")list.sort((a,b)=>b.price-a.price);
+  if(so==="3")list.sort((a,b)=>L(a.name).localeCompare(L(b.name),LANG));
+  $("#grid").innerHTML=list.length?list.map(p=>`<div class="card">${p.old>p.price?`<div class="tag">−${Math.round((1-p.price/p.old)*100)}%</div>`:""}
+    <div class="pic" onclick="showProduct(${p.id})">${thumb(p)}</div><div class="pcat">${esc(L(p.cat))}</div>
+    <div class="pname" onclick="showProduct(${p.id})">${esc(L(p.name))}</div>
+    <div class="prow"><span class="price">${fmt(p.price)}</span>${p.old>p.price?`<span class="old">${fmt(p.old)}</span>`:""}</div>
+    <button class="btn" ${p.stock<=0?"disabled":""} onclick="add(${p.id})">${p.stock<=0?t("s_out"):t("s_add")}</button></div>`).join(""):`<div class="empty">${t("s_none")}</div>`;
+}
+function showProduct(id){
+  const p=byId(id);if(!p)return;
+  openModal(`<div class="photo-prev" style="height:240px;font-size:90px">${thumb(p)}</div><div class="note">${esc(L(p.cat))}</div><h2>${esc(L(p.name))}</h2>
+   <p style="margin-bottom:12px;white-space:pre-wrap">${esc(L(p.desc)||t("s_nodesc"))}</p>
+   <div class="prow"><span class="price" style="font-size:22px">${fmt(p.price)}</span>${p.old>p.price?`<span class="old">${fmt(p.old)}</span>`:""}</div>
+   <p class="note" style="margin-bottom:10px">${p.stock>0?t("s_instock",p.stock):t("s_out")}</p>
+   <button class="btn" style="width:100%" ${p.stock<=0?"disabled":""} onclick="add(${p.id});closeModal()">${t("s_add")}</button>`);
+}
+
+/* корзина */
+function add(id){const p=byId(id);if(!p)return;if((cart[id]||0)>=p.stock)return toast(t("s_nomore"));cart[id]=(cart[id]||0)+1;saveCart();renderCart();toast(t("s_added"))}
+function chg(id,d){const p=byId(id);if(d>0&&p&&cart[id]>=p.stock)return toast(t("s_nomore"));cart[id]+=d;if(cart[id]<=0)delete cart[id];saveCart();renderCart()}
+function totals(){let sub=0;for(const id in cart){const p=byId(id);if(p)sub+=p.price*cart[id]}
+  const fee=dl==="delivery"&&sub>0&&!(S.freeFrom>0&&sub>=S.freeFrom)?(+S.deliveryFee||0):0;return{sub,fee,total:sub+fee}}
+function renderCart(){
+  for(const id in cart){const p=byId(id);if(!p||p.stock<=0)delete cart[id];else if(cart[id]>p.stock)cart[id]=p.stock}
+  saveCart();
+  const ids=Object.keys(cart);
+  $("#count").textContent=ids.reduce((s,i)=>s+cart[i],0);
+  $("#items").innerHTML=ids.length?ids.map(i=>{const p=byId(i);return `<div class="item"><div class="th">${thumb(p)}</div><div class="i">${esc(L(p.name))}<br><b>${fmt(p.price)}</b></div>
+    <div class="qty"><button onclick="chg(${i},-1)">−</button>${cart[i]}<button onclick="chg(${i},1)">+</button></div></div>`}).join(""):`<div class="empty">${t("s_empty")}</div>`;
+  const T=totals();
+  $("#sSub").textContent=fmt(T.sub);
+  $("#sFee").textContent=dl==="pickup"||(T.fee===0&&T.sub>0)?t("s_free"):fmt(T.fee);
+  $("#sTotal").textContent=fmt(T.total);
+  $("#dl_delivery").classList.toggle("on",dl==="delivery");$("#dl_pickup").classList.toggle("on",dl==="pickup");
+  $("#pay_cash").classList.toggle("on",pay==="cash");$("#pay_card").classList.toggle("on",pay==="card");
+  $("#ca").parentElement.classList.toggle("hidden",dl==="pickup");
+  $("#pickNote").classList.toggle("hidden",dl!=="pickup");
+  $("#pickNote").textContent=t("s_pickup_at",S.addr||"");
+}
+function setDl(v){dl=v;renderCart()}
+function setPay(v){pay=v;renderCart()}
+function openCart(){$("#drawer").classList.add("show");$("#ov").classList.add("show")}
+function closeCart(){$("#drawer").classList.remove("show");$("#ov").classList.remove("show")}
+
+async function placeOrder(){
+  const ids=Object.keys(cart);if(!ids.length)return toast(t("s_empty"));
+  const name=$("#cn").value.trim(),phone=$("#cp").value.trim(),addr=$("#ca").value.trim();
+  if(name.length<2||(dl==="delivery"&&addr.length<3))return toast(t("s_fill"));
+  if(phone.replace(/\D/g,"").length<9)return toast(t("s_phoneerr"));
+  const btn=$("#orderBtn");btn.disabled=true;
+  try{
+    const r=await DB.createOrder({customer:{name,phone,addr:dl==="delivery"?addr:"",comment:$("#cc").value.trim()},items:ids.map(i=>({id:+i,qty:cart[i]})),delivery:dl,payment:pay});
+    cart={};saveCart();$("#cc").value="";
+    await loadData();renderAll();closeCart();
+    openModal(`<div style="text-align:center;padding:10px 0"><div style="font-size:60px">✅</div><h2 style="padding:0">${t("s_thanks_t")}</h2><p style="margin:10px 0 18px">${t("s_thanks",r.id)}</p><button class="btn" onclick="closeModal()">${t("close")}</button></div>`);
+  }catch(e){
+    toast(e.message==="stock"?t("err_stock"):e.message==="net"?t("err_net"):t("err_invalid"));
+    try{await loadData();renderAll()}catch(_){}
+  }
+  btn.disabled=false;
+}
+
+(async function(){
+  await DB.init();
+  try{await loadData()}catch(e){toast(t("err_net"))}
+  renderAll();
+  setInterval(async()=>{if($("#drawer").classList.contains("show"))return;try{await loadData();renderCats();renderGrid();renderCart()}catch(e){}},30000);
+  window.addEventListener("storage",async()=>{try{await loadData();renderAll()}catch(e){}});
+})();
+</script>
+</body>
+</html>
