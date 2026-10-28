@@ -541,7 +541,7 @@ function renderStore(){
   const nm=S.name||"105 Market";
   $("#heroT").textContent=t("s_hero",nm);
   const parts=[`© ${esc(nm)}`,esc(S.phone||""),esc(S.addr||"")].filter(Boolean).join(" · ");
-  $("#footer").innerHTML=parts+(S.hours?`<br>${t("s_hours")}: ${esc(S.hours)}`:"")+(S.freeFrom>0?`<br>${t("s_freefrom",fmt(S.freeFrom))}`:"")+`<br><a href="#admin">🔐 ${t("a_title")}</a>`;
+  $("#footer").innerHTML=parts+(S.hours?`<br>${t("s_hours")}: ${esc(S.hours)}`:"")+(S.freeFrom>0?`<br>${t("s_freefrom",fmt(S.freeFrom))}`:"");
   renderCats();renderGrid();renderCart();
 }
 function renderCats(){
